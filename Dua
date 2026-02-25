@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ramadan Dua PDF Generator</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f766e 0%, #134e4a 100%);
+      overflow: auto;
+    }
+
+    .app-wrapper {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: linear-gradient(135deg, #0f766e 0%, #134e4a 100%);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+      color: white;
+      padding: 40px 30px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .header p {
+      font-size: 16px;
+      opacity: 0.95;
+    }
+
+    .button-section {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      padding: 30px;
+      background: #f0fdf4;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .btn {
+      padding: 12px 28px;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-download {
+      background: #0d9488;
+      color: white;
+    }
+
+    .btn-download:hover {
+      background: #0f766e;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(13, 148, 136, 0.3);
+    }
+
+    .btn-print {
+      background: #e0f2fe;
+      color: #0369a1;
+    }
+
+    .btn-print:hover {
+      background: #bae6fd;
+      transform: translateY(-2px);
+    }
+
+    .content {
+      padding: 40px;
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+
+    .section {
+      margin-bottom: 35px;
+    }
+
+    .section-title {
+      font-size: 22px;
+      color: #0d9488;
+      font-weight: 700;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-content {
+      color: #374151;
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    .goals-box {
+      background: #f0fdf4;
+      border-left: 4px solid #0d9488;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 6px;
+    }
+
+    .goals-box h3 {
+      color: #0d9488;
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+
+    .goal-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 8px;
+      color: #1f2937;
+    }
+
+    .goal-item strong {
+      color: #0f766e;
+    }
+
+    .dua-box {
+      background: #fef7e7;
+      border-left: 4px solid #d4a574;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 6px;
+      font-style: italic;
+    }
+
+    .dua-arabic {
+      color: #b91c1c;
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 10px;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .dua-transliteration {
+      color: #7c3aed;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .dua-translation {
+      color: #374151;
+      font-size: 14px;
+    }
+
+    .table-section {
+      margin: 20px 0;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    th {
+      background: #f3f4f6;
+      font-weight: 600;
+      color: #0f766e;
+    }
+
+    tr:hover {
+      background: #f9fafb;
+    }
+
+    .routine-box {
+      background: #ecfdf5;
+      padding: 15px;
+      margin: 12px 0;
+      border-radius: 6px;
+      border-left: 3px solid #10b981;
+    }
+
+    .routine-box strong {
+      color: #0d9488;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .routine-box p {
+      color: #374151;
+      line-height: 1.6;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 20px;
+      background: #f9fafb;
+      border-top: 1px solid #e5e7eb;
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    .divider {
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #0d9488, transparent);
+      margin: 25px 0;
+    }
+
+    @media print {
+      .button-section {
+        display: none;
+      }
+      body {
+        background: white;
+      }
+      .app-wrapper {
+        background: white;
+        padding: 0;
+      }
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="https://cdn.tailwindcss.com/3.4.17" type="text/javascript"></script>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+ </head>
+ <body>
+  <div class="app-wrapper">
+   <div class="container">
+    <div class="header">
+     <h1>🌙 Ramadan Dua Routine</h1>
+     <p>Ramz-e-Qadr System for Powerful &amp; Consistent Duas</p>
+    </div>
+    <div class="button-section"><button class="btn btn-download" onclick="downloadPDF()">📥 Download as PDF</button> <button class="btn btn-print" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="pdfContent" class="content"><!-- Your 3 Goals -->
+     <div class="section">
+      <div class="section-title">
+       🤲🏻 Your 3 Life-Changing Goals
+      </div>
+      <div class="goals-box">
+       <h3>Alhamdulillah, you are asking Allah for:</h3>
+       <div class="goal-item"><span>🤲🏻</span>
+        <div>
+         <strong>Halal Reunion with Uzma</strong> — Union blessed by deen and dunya
+        </div>
+       </div>
+       <div class="goal-item"><span>🎓</span>
+        <div>
+         <strong>Scholarship &amp; Higher Studies</strong> — Academic excellence and growth
+        </div>
+       </div>
+       <div class="goal-item"><span>🏗️</span>
+        <div>
+         <strong>Design / Transportation Engineering</strong> — Career growth and success
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="divider"></div><!-- 1. Tahajjud Time -->
+     <div class="section">
+      <div class="section-title">
+       🕓 1. Last 1 Hour Before Fajr (Tahajjud Time)
+      </div>
+      <div class="routine-box"><strong>Pray 2 or 4 Rak'ah Tahajjud</strong>
+       <p>In Sujood (prostration), make this powerful dua:</p>
+      </div>
+      <div class="dua-box">
+       <div class="dua-arabic">
+        اللهم إن كان في اجتماعنا خير لديننا ودنيانا وآخرتنا فاجمع بيني وبين أُزْمى بالحلال عاجلاً غير آجل، وألّف بين قلوب أهلنا، واكتب لنا الحب الطيب حتى جنة الفردوس.
+       </div>
+       <div class="dua-translation">
+        <strong>Meaning:</strong> O Allah, if our union is good for our deen, dunya and akhirah, then reunite me and Uzma in halal soon, unite our families' hearts, and write for us pure love till Jannatul Firdaus.
+       </div>
+      </div>
+      <p style="color: #374151; margin-top: 12px;">Then say:</p>
+      <div class="dua-box">
+       <div class="dua-arabic">
+        رَبِّ إِنِّي لِمَا أَنزَلْتَ إِلَيَّ مِنْ خَيْرٍ فَقِيرٌ
+       </div>
+       <div class="dua-transliteration">
+        <strong>Transliteration:</strong> Rabbi inni lima anzalta ilayya min khairin faqeer
+       </div>
+       <div class="dua-translation">
+        "My Lord, I am in need of whatever good You send me."
+       </div>
+      </div>
+      <div class="routine-box" style="margin-top: 15px;"><strong>➡️ Make Niyyah (Intention) for:</strong>
+       <p>• Scholarship &amp; career growth<br>
+         • Emotional healing &amp; clarity<br>
+         • Allah's guidance in all matters</p>
+      </div>
+     </div>
+     <div class="divider"></div><!-- 2. After Fajr -->
+     <div class="section">
+      <div class="section-title">
+       🕌 2. After Fajr Prayer
+      </div>
+      <div class="routine-box"><strong>Recite Surah Al-Inshirah (Chapter 94)</strong>
+       <p>Recite it 7 times for opening of blocked paths and ease in all affairs</p>
+      </div>
+      <p style="color: #374151; margin-top: 15px; margin-bottom: 10px;">Then say with full presence:</p>
+      <div class="dua-box">
+       <div class="dua-arabic">
+        حسبيَ الله لا إله إلا هو
+       </div>
+       <div class="dua-transliteration">
+        <strong>Transliteration:</strong> HasbiyaAllahu la ilaha illa Huwa
+       </div>
+       <div class="dua-translation">
+        "Allah is sufficient for me, there is no deity except Him"
+       </div>
+       <p style="margin-top: 8px; font-size: 13px;">Recite 100 times for Allah's help in seemingly impossible matters</p>
+      </div>
+     </div>
+     <div class="divider"></div><!-- 3. During Fast -->
+     <div class="section">
+      <div class="section-title">
+       ☀️ 3. During the Fast (Any Time)
+      </div>
+      <div class="routine-box"><strong>Silent Dhikr While Working or Walking:</strong>
+       <p>Keep repeating these divine names with full presence in your heart</p>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 15px;">
+       <div class="dua-box" style="text-align: center;">
+        <div style="font-size: 18px; color: #b91c1c; font-weight: 700; margin-bottom: 8px;">
+         Ya Fattah
+        </div>
+        <div style="font-size: 13px; color: #374151;">
+         Opens closed doors &amp; barriers
+        </div>
+       </div>
+       <div class="dua-box" style="text-align: center;">
+        <div style="font-size: 18px; color: #b91c1c; font-weight: 700; margin-bottom: 8px;">
+         Ya Razzaq
+        </div>
+        <div style="font-size: 13px; color: #374151;">
+         Provides rizq, job, scholarship
+        </div>
+       </div>
+       <div class="dua-box" style="text-align: center;">
+        <div style="font-size: 18px; color: #b91c1c; font-weight: 700; margin-bottom: 8px;">
+         Ya Lateef
+        </div>
+        <div style="font-size: 13px; color: #374151;">
+         Softens hearts of families
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="divider"></div><!-- 4. Before Iftar -->
+     <div class="section">
+      <div class="section-title">
+       🌇 4. Last 5 Minutes Before Iftar ⚠️ MOST POWERFUL
+      </div>
+      <div class="routine-box"><strong>Raise Your Hands with Full Heart</strong>
+       <p>The dua of a fasting person is not rejected</p>
+      </div>
+      <div class="dua-box">
+       <div class="dua-arabic">
+        اللهم غيّر قلبي وقلبها وقلوب أهلنا لما فيه الخير، واكتب لنا الزواج بالحلال إن كان خيراً لنا، ويسّر لي القبول في المنح الدراسية، وافتح لي أبواب الهندسة والتصميم.
+       </div>
+       <div class="dua-translation">
+        <strong>Meaning:</strong> O Allah, change my heart, her heart, and our families' hearts toward what is good. Write marriage for us in halal if it is good, grant me scholarship acceptance, and open the doors of engineering and design for me.
+       </div>
+      </div>
+      <p style="color: #374151; margin-top: 12px;">Then conclude with:</p>
+      <div class="dua-box">
+       <div class="dua-arabic">
+        اللهم إنك عفو تحب العفو فاعفُ عنّي
+       </div>
+       <div class="dua-transliteration">
+        <strong>Transliteration:</strong> Allahumma innaka 'afuwwun tuhibbul 'afwa fa'fu 'anni
+       </div>
+       <div class="dua-translation">
+        "O Allah, You are Pardoner and love pardon, so pardon me"
+       </div>
+      </div>
+     </div>
+     <div class="divider"></div><!-- 5. After Taraweeh -->
+     <div class="section">
+      <div class="section-title">
+       🌙 5. After Taraweeh Prayer
+      </div>
+      <div class="routine-box"><strong>Pray 2 Rak'ah Nafl (Optional Prayer)</strong>
+       <p>Intention: For career in Transportation/Design, future stability, and if Allah wills, reunion with Uzma</p>
+      </div>
+      <div class="dua-box">
+       <div class="dua-translation" style="font-style: italic;">
+        "Ya Allah, make me the strongest version of myself before You reunite me with her. Make me worthy of this blessing through my character, dedication, and faith."
+       </div>
+      </div>
+     </div>
+     <div class="divider"></div><!-- Weekly Target -->
+     <div class="section">
+      <div class="section-title">
+       🧭 Weekly Ibadah Target
+      </div>
+      <div class="table-section">
+       <table>
+        <thead>
+         <tr>
+          <th>Ibadah (Act of Worship)</th>
+          <th>Daily/Weekly Target</th>
+         </tr>
+        </thead>
+        <tbody>
+         <tr>
+          <td>Tahajjud Prayer</td>
+          <td>4 days per week minimum</td>
+         </tr>
+         <tr>
+          <td>Istighfar (Seeking Forgiveness)</td>
+          <td>1000 times per day</td>
+         </tr>
+         <tr>
+          <td>Salawat (Blessings on Prophet)</td>
+          <td>300 times per day</td>
+         </tr>
+         <tr>
+          <td>Quran Recitation</td>
+          <td>1 Juz (Chapter) per day</td>
+         </tr>
+         <tr>
+          <td>Sadaqah (Charity)</td>
+          <td>Every Friday (minimum)</td>
+         </tr>
+        </tbody>
+       </table>
+      </div>
+     </div>
+     <div class="divider"></div><!-- Last 10 Nights -->
+     <div class="section">
+      <div class="section-title">
+       🌌 Last 10 Nights Special Dua (Laylatul Qadr)
+      </div>
+      <div class="routine-box"><strong>Every Night in the Last 10 Nights of Ramadan</strong>
+       <p>Laylatul Qadr (Night of Power) can come on any odd night. Stand in prayer and recite:</p>
+      </div>
+      <div class="dua-box">
+       <div class="dua-arabic">
+        اللهم إنك عفو تحب العفو فاعف عني، واكتب لي ما أتمنى إن كان خيراً لي.
+       </div>
+       <div class="dua-translation">
+        <strong>Meaning:</strong> O Allah, You are Pardoner and love pardon, so pardon me, and write for me what I wish if it is good for me.
+       </div>
+      </div>
+     </div>
+     <div class="divider"></div><!-- Closing Message -->
+     <div class="section">
+      <div class="routine-box" style="background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border-left: 4px solid #059669;"><strong style="color: #0d9488; font-size: 16px;">💚 Remember:</strong>
+       <p style="margin-top: 8px; color: #1f2937; line-height: 1.8;">This is your <strong>Ramz-e-Qadr Ramadan System</strong> — not forcing destiny, but <strong>asking the One who writes destiny.</strong><br><br>
+         Stay consistent till Eid. Because Laylatul Qadr can come on any odd night. Keep making dua, stay disciplined, and trust Allah's wisdom.<br><br><strong>Alhamdulillah for this opportunity. May Allah accept from all of us. 🤍</strong></p>
+      </div>
+     </div>
+    </div>
+    <div class="footer">
+     <p>✨ Ramz-e-Qadr System | Ramadan 2025 | May Allah Accept Our Duas 🤍</p>
+    </div>
+   </div>
+  </div>
+  <script>
+    function downloadPDF() {
+      const element = document.getElementById('pdfContent');
+      const opt = {
+        margin: 10,
+        filename: 'Ramadan-Dua-Routine.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+      };
+      html2pdf().set(opt).from(element).save();
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d32d0a29581e0d2',t:'MTc3MTk3NjUwMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
